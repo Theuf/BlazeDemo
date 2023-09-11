@@ -14,6 +14,6 @@ Após a execução, o Gatling irá gerar um relatório em HTML que pode ser enco
 ## Considerações
 
 - O critério de aceitação é 250 requisições por segundo com um tempo de resposta 90th percentil inferior a 2 segundos.
-- Analise o relatório para determinar se o critério foi atendido.
+- Analisando o relatório sera possivel determinar se o critério foi atendido.
 3. Relatório de Execução
-Infelizmente, não posso executar o script de performance aqui e fornecer um relatório real. No entanto, após a execução do script em sua máquina, você pode verificar o relatório gerado pelo Gatling. Se o 90th percentil do tempo de resposta for inferior a 2 segundos e você conseguir atingir 250 requisições por segundo, o critério de aceitação foi atendido.
+  Após a execução do script em sua máquina, você pode verificar o relatório gerado pelo Gatling. Se o 90th percentil do tempo de resposta for inferior a 2 segundos e você conseguir atingir 250 requisições por segundo, o critério de aceitação foi atendido.
