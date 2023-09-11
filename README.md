@@ -1,19 +1,41 @@
-# Teste de Performance - BlazeDemo
+package blazedemo
 
-## Instruções para Execução
+import io.gatling.core.Predef._
+import io.gatling.http.Predef._
+import scala.concurrent.duration._
 
-1. Instale o Gatling seguindo as instruções em https://gatling.io/docs/current/installation/
-2. Clone este repositório.
-3. Copie o script `BlazeDemoFlightBooking.scala` para a pasta `user-files/simulations` do diretório de instalação do Gatling.
-4. Execute o Gatling e selecione o script `BlazeDemoFlightBooking`.
+class BlazeDemoFlightBooking extends Simulation {
 
-## Relatório de Execução
+  val httpProtocol = http
+    .baseUrl("https://www.blazedemo.com")
+    .header("Accept", "text/html")
+    .header("User-Agent", "Mozilla/5.0")
 
-Após a execução, o Gatling irá gerar um relatório em HTML que pode ser encontrado no diretório `results` do Gatling.
+  val scn = scenario("Book Flight Scenario")
+    .exec(http("Load Homepage")
+      .get("/"))
+    .pause(1)
+    .exec(http("Select Flight")
+      .post("/reserve.php")
+      .formParam("fromPort", "Paris")
+      .formParam("toPort", "Buenos Aires"))
+    .pause(1)
+    .exec(http("Purchase Flight")
+      .post("/purchase.php")
+      .formParam("inputName", "John Doe")
+      .formParam("address", "123 Main St")
+      .formParam("city", "Anytown")
+      .formParam("state", "CA")
+      .formParam("zipCode", "12345")
+      .formParam("creditCardNumber", "4111111111111111")
+      .formParam("creditCardMonth", "12")
+      .formParam("creditCardYear", "2023")
+      .formParam("nameOnCard", "John Doe"))
 
-## Considerações
-
-- O critério de aceitação é 250 requisições por segundo com um tempo de resposta 90th percentil inferior a 2 segundos.
-- Analise o relatório para determinar se o critério foi atendido.
-3. Relatório de Execução
-Infelizmente, não posso executar o script de performance aqui e fornecer um relatório real. No entanto, após a execução do script em sua máquina, você pode verificar o relatório gerado pelo Gatling. Se o 90th percentil do tempo de resposta for inferior a 2 segundos e você conseguir atingir 250 requisições por segundo, o critério de aceitação foi atendido.
+  setUp(
+    scn.inject(
+      rampUsersPerSec(5) to 250 during (1 minute), // Teste de carga
+      constantUsersPerSec(250) during (5 minutes) // Teste de pico
+    )
+  ).protocols(httpProtocol)
+}
